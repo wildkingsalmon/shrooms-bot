@@ -1,0 +1,18 @@
+name: VPS Deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    concurrency: vps-deploy
+    steps:
+      - name: Deploy via SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H 89.167.72.227 >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -o StrictHostKeyChecking=no ben@89.167.72.227 "cd /home/ben/shrooms-bot && git pull origin main && .venv/bin/pip install -q -r requirements.txt && sudo systemctl restart shrooms-bot"
