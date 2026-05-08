@@ -1,0 +1,19 @@
+[Unit]
+Description=Bitcoin Shrooms sales watcher
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ben
+WorkingDirectory=/home/ben/shrooms-bot
+EnvironmentFile=/home/ben/shrooms-bot/.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/ben/shrooms-bot/.venv/bin/python /home/ben/shrooms-bot/watcher.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
